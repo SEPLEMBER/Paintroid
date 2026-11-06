@@ -1,0 +1,44 @@
+name: Android Paintroid CI
+
+on:
+  push:
+    branches: [ "main", "master", "develop" ]
+  pull_request:
+    branches: [ "main", "master", "develop" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+      with:
+        submodules: true # КРИТИЧЕСКИ ВАЖНО для подтягивания модуля Paintroid и ресурсов
+        fetch-depth: 0
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17' # В build.gradle явно указана Java 17
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v3
+
+    - name: Build Release APK
+      # Собираем стандартный release. Благодаря нашим правкам, он подпишется debug-ключом
+      run: ./gradlew assembleRelease --no-daemon
+
+    - name: List generated APKs
+      run: |
+        echo "📦 Сгенерированные APK:"
+        ls -lh app/build/outputs/apk/release/*.apk || echo "APK не найдены"
+
+    - name: Upload Release APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: paintroid-release
+        path: app/build/outputs/apk/release/*.apk
+        retention-days: 2
+        if-no-files-found: error
