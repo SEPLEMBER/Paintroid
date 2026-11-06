@@ -56,6 +56,7 @@ import org.catrobat.paintroid.ui.zoomwindow.DefaultZoomWindowController.Constant
 open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private val canvasRect = Rect()
     private val framePaint = Paint()
+    private val shadowPaint = Paint() // <-- ДОБАВЛЕНО: Кисть для тени
     private val checkeredPattern = Paint()
     private var surfaceDirty = false
     private var surfaceReady = false
@@ -80,12 +81,21 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     init {
         surfaceLock = Object()
         
-        // <-- ИЗМЕНЕНО: Темно-серый цвет фона за холстом (#0A0A0A) вместо ресурса
-        bgColor = Color.parseColor("#0A0A0A")
+        // <-- ИДЕАЛЬНЫЙ ВАРИАНТ: Глубокий темно-серый фон (стандарт Material Dark)
+        bgColor = Color.parseColor("#121212")
         
-        framePaint.color = Color.BLACK
+        // <-- ИДЕАЛЬНЫЙ ВАРИАНТ: Настройка тени для эффекта "парящего" холста
+        shadowPaint.color = Color.BLACK
+        shadowPaint.style = Paint.Style.STROKE
+        shadowPaint.strokeWidth = 16f // Широкая линия для создания объема тени
+        shadowPaint.alpha = 90 // Полупрозрачность
+
+        // <-- ИДЕАЛЬНЫЙ ВАРИАНТ: Настройка рамки (видна на любом изображении)
+        framePaint.color = Color.parseColor("#757575") // Умеренно-серый цвет границы
         framePaint.style = Paint.Style.STROKE
+        framePaint.strokeWidth = 2f // Толщина рамки
         framePaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC)
+        
         val checkerboard =
             BitmapFactory.decodeResource(resources, R.drawable.pocketpaint_checkeredbg)
         val shader = BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
@@ -168,6 +178,13 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
             surfaceViewCanvas.restore()
         }
         surfaceViewCanvas.drawRect(canvasRect, checkeredPattern)
+
+        // <-- ИДЕАЛЬНЫЙ ВАРИАНТ: Отрисовка тени (смещение вправо-вниз)
+        val shadowRect = Rect(canvasRect)
+        shadowRect.offset(8, 8) // Смещение тени на 8 пикселей
+        surfaceViewCanvas.drawRect(shadowRect, shadowPaint)
+
+        // <-- ИДЕАЛЬНЫЙ ВАРИАНТ: Отрисовка рамки поверх
         surfaceViewCanvas.drawRect(canvasRect, framePaint)
     }
 
