@@ -1,3 +1,24 @@
+import io.gitlab.arturbosch.detekt.Detekt
+
+/**
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2022 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 apply plugin: 'com.android.application'
 
 ext {
@@ -36,7 +57,7 @@ android {
     signingConfigs {
         signedRelease {
             def ksFile = file(project.property("signingKeystore"))
-            // <-- ИЗМЕНЕНО: Проверяем существование файла, чтобы избежать ошибок конфигурации в CI
+            // Проверяем существование файла, чтобы избежать ошибок конфигурации в CI
             if (ksFile.exists()) {
                 storeFile = ksFile
             }
@@ -65,7 +86,7 @@ android {
             minifyEnabled true
             proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
             
-            // <-- ИЗМЕНЕНО: Подписываем релиз дебажным ключом для CI
+            // Подписываем релиз дебажным ключом для CI
             signingConfig signingConfigs.debug
         }
         signedRelease {
@@ -88,7 +109,7 @@ android {
 
     namespace = "org.catrobat.paintroid.app"
     
-    // <-- ДОБАВЛЕНО: Отключаем строгие проверки lint для CI
+    // Отключаем строгие проверки lint, чтобы они не валили CI
     lint {
         abortOnError false
     }
