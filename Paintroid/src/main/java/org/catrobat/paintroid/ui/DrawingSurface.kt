@@ -4,17 +4,17 @@
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.catrobat.paintroid.ui
 
@@ -79,10 +79,10 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
 
     init {
         surfaceLock = Object()
-        bgColor = ContextCompat.getColor(
-            context,
-            R.color.pocketpaint_main_drawing_surface_background
-        )
+        
+        // <-- ИЗМЕНЕНО: Темно-серый цвет фона за холстом (#0A0A0A) вместо ресурса
+        bgColor = Color.parseColor("#0A0A0A")
+        
         framePaint.color = Color.BLACK
         framePaint.style = Paint.Style.STROKE
         framePaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC)
